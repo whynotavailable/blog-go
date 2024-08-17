@@ -1,0 +1,21 @@
+{{define "body"}}
+{{range .Posts}}
+<div class="mb-4">
+  <h2 class="underline"><a href="/post/{{.Slug}}">{{.Title}}</a></h2>
+  <a class="text-on" href="/?tag={{.Tag}}">#{{.Tag}}</a>
+</div>
+{{else}}
+<div class="no-posts">Nothing here yet...</div>
+<div class="">
+  {{if ne .Prev ""}}
+  <span class="mr-2">
+    <a class="underline text-on mr-2" href="{{.Prev}}">prev</a>
+    {{if ne .Next ""}}
+    -
+    {{end}}
+  </span>
+  {{end}}
+  {{if ne .Next ""}}<a class="underline text-on" href="{{.Next}}">next</a>{{end}}
+</div>
+{{end}}
+{{end}}

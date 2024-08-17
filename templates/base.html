@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JFRMJWT6VN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-JFRMJWT6VN');
+  </script>
+
+  <meta charset="utf-8">
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why Not {{.Title}}</title>
+  <link rel="stylesheet" href="/assets/new_styles.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
+    rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet" />
+  <style>
+    /* This is needed here otherwise PostCSS will strip the important part out. */
+    pre[class*=language-] {
+      padding: 0.25rem !important;
+    }
+  </style>
+</head>
+
+<body class="bg-black text-white font-normal">
+  <div class="max-w-[900px] px-4 mx-auto text-lg font-body">
+    <nav class="my-2 text-muted mx-auto w-fit">
+      <ul>
+        <li class="after:content-['-']">
+          <a class="mx-2" href="/">Home</a>
+        </li>
+        <li class="after:content-['-']">
+          <a class="mx-2" href="/page/about">About</a>
+        </li>
+        <li>
+          <a class="mx-2" href="/?tag=programming">Programming</a>
+        </li>
+      </ul>
+    </nav>
+    <hr class="border-muted mb-2 border-dashed" />
+    <div>
+      {{ template "body" . }}
+    </div>
+    <hr class="border-muted mt-2 border-dashed" />
+    <div class="my-2 text-muted mx-auto w-fit">
+      Welcome to my website! I like to program.
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js" defer></script>
+</body>
+
+</html>

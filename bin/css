@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -e
+
+npx tailwindcss -i ./main.css -o ./assets/new_styles.css --watch

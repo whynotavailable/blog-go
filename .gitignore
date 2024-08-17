@@ -1,0 +1,7 @@
+.DS_Store
+tmp/
+out/
+.env
+
+# Don't include templ compiled files
+*templ.go

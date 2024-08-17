@@ -1,0 +1,9 @@
+{{define "body"}}
+<div class="post-header mb-4">
+  <h1>{{ .Title }}</h1>
+  <a class="text-on" href="/?tag={{ .Tag }}">#{{ .Tag }}</a>
+</div>
+<div class="contents">
+  {{ .Content }}
+</div>
+{{end}}
