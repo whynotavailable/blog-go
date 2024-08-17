@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./templates/*.templ"
+    "./templates/*.html"
   ],
   safelist: [
     'size-2/5'
