@@ -3,6 +3,9 @@ module.exports = {
   content: [
     "./templates/*.templ"
   ],
+  safelist: [
+    'size-2/5'
+  ],
   theme: {
     extend: {
       fontFamily: {
