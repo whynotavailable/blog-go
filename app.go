@@ -37,10 +37,10 @@ func (state *appState) homeHandler(w http.ResponseWriter, r *http.Request) {
 	if tag == "" {
 		// SELECT slug, tag, title FROM post WHERE published = TRUE AND tag = ?1 ORDER BY timestamp DESC LIMIT 6 OFFSET ?2
 		state.db.Select(&posts, "SELECT slug, tag, title FROM post WHERE published = TRUE ORDER BY timestamp DESC LIMIT 6 OFFSET ?1", offset)
-		searchResults.Title = "Home Search"
+		searchResults.Title = "Home"
 	} else {
 		state.db.Select(&posts, "SELECT slug, tag, title FROM post WHERE published = TRUE AND tag = ?1 ORDER BY timestamp DESC LIMIT 6 OFFSET ?2", tag, offset)
-		searchResults.Title = fmt.Sprintf("%s Search", tag)
+		searchResults.Title = fmt.Sprintf("%s List", tag)
 	}
 
 	// Previous Page
