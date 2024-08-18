@@ -43,21 +43,23 @@ func (state *appState) homeHandler(w http.ResponseWriter, r *http.Request) {
 		searchResults.Title = fmt.Sprintf("%s List", tag)
 	}
 
-	// Previous Page
-	if page == 1 {
-		searchResults.Prev = "/"
-	} else if page > 1 {
-		searchResults.Prev = fmt.Sprintf("/?page=%d", page-1)
-	}
-
-	if tag != "" {
-		if strings.Contains(searchResults.Prev, "?") {
-			searchResults.Prev += "&"
-		} else {
-			searchResults.Prev += "?"
+	if page > 0 {
+		// Previous Page
+		if page == 1 {
+			searchResults.Prev = "/"
+		} else if page > 1 {
+			searchResults.Prev = fmt.Sprintf("/?page=%d", page-1)
 		}
 
-		searchResults.Prev += fmt.Sprintf("tag=%s", url.QueryEscape(tag))
+		if tag != "" {
+			if strings.Contains(searchResults.Prev, "?") {
+				searchResults.Prev += "&"
+			} else {
+				searchResults.Prev += "?"
+			}
+
+			searchResults.Prev += fmt.Sprintf("tag=%s", url.QueryEscape(tag))
+		}
 	}
 
 	// Next Page
