@@ -13,7 +13,10 @@ import (
 )
 
 type appState struct {
-	db *sqlx.DB
+	db             *sqlx.DB
+	searchTemplate *template.Template
+	pageTemplate   *template.Template
+	postTemplate   *template.Template
 }
 
 func (state *appState) homeHandler(w http.ResponseWriter, r *http.Request) {
@@ -66,15 +69,9 @@ func (state *appState) homeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	template, err := template.ParseFiles("templates/base.html", "templates/search.html")
-	if err != nil {
-		w.WriteHeader(500)
-		fmt.Fprintf(w, "%v", err)
-		return
-	}
-
 	searchResults.Posts = posts
-	err = template.Execute(w, searchResults)
+
+	err = state.searchTemplate.Execute(w, searchResults)
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, "%v", err)
@@ -100,16 +97,8 @@ func (state *appState) pageHandler(w http.ResponseWriter, r *http.Request) {
 		page.Content = template.HTML(pageModel.Content.V)
 	}
 
-	// TODO: Make this once and share it out
-	template, err := template.ParseFiles("templates/base.html", "templates/page.html")
-	if err != nil {
-		w.WriteHeader(500)
-		fmt.Fprintf(w, "%v", err)
-		return
-	}
-
 	// hello := templates.Hello(r.PathValue("id"))
-	err = template.Execute(w, page)
+	err = state.pageTemplate.Execute(w, page)
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, "%v", err)
@@ -141,16 +130,8 @@ func (state *appState) postHandler(w http.ResponseWriter, r *http.Request) {
 		page.Content = template.HTML(pageModel.Content.V)
 	}
 
-	// TODO: Make this once and share it out
-	template, err := template.ParseFiles("templates/base.html", "templates/post.html")
-	if err != nil {
-		w.WriteHeader(500)
-		fmt.Fprintf(w, "%v", err)
-		return
-	}
-
 	// hello := templates.Hello(r.PathValue("id"))
-	err = template.Execute(w, page)
+	err = state.postTemplate.Execute(w, page)
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, "%v", err)

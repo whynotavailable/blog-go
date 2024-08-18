@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 	"os"
 
@@ -12,6 +13,25 @@ import (
 
 func main() {
 	_ = godotenv.Load()
+
+	searchTemplate, err := template.ParseFiles("templates/base.html", "templates/search.html")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to load template %v", err)
+		os.Exit(1)
+	}
+
+	pageTemplate, err := template.ParseFiles("templates/base.html", "templates/page.html")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to load template %v", err)
+		os.Exit(1)
+	}
+
+	postTemplate, err := template.ParseFiles("templates/base.html", "templates/post.html")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to load template %v", err)
+		os.Exit(1)
+	}
+
 	libsql_url := os.Getenv("libsql_url")
 	libsql_token := os.Getenv("libsql_token")
 	url := fmt.Sprintf("%s?authToken=%s", libsql_url, libsql_token)
@@ -26,7 +46,10 @@ func main() {
 	fs := http.FileServer(http.Dir("./assets"))
 
 	state := appState{
-		db: db,
+		db:             db,
+		searchTemplate: searchTemplate,
+		pageTemplate:   pageTemplate,
+		postTemplate:   postTemplate,
 	}
 
 	http.HandleFunc("GET /", state.homeHandler)
