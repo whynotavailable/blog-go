@@ -67,7 +67,7 @@ func (state *appState) homeHandler(w http.ResponseWriter, r *http.Request) {
 		searchResults.Next = fmt.Sprintf("/?page=%d", page+1)
 
 		if tag != "" {
-			searchResults.Next += fmt.Sprintf("tag=%s", url.QueryEscape(tag))
+			searchResults.Next += fmt.Sprintf("&tag=%s", url.QueryEscape(tag))
 		}
 
 		posts = posts[:5]
