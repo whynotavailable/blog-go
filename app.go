@@ -61,14 +61,17 @@ func (state *appState) homeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Next Page
-	if len(posts) == 5 {
+	if len(posts) > 5 {
 		searchResults.Next = fmt.Sprintf("/?page=%d", page+1)
 
 		if tag != "" {
 			searchResults.Next += fmt.Sprintf("tag=%s", url.QueryEscape(tag))
 		}
+
+		posts = posts[:5]
 	}
 
+	fmt.Println(searchResults.Next)
 	searchResults.Posts = posts
 
 	err = state.searchTemplate.Execute(w, searchResults)
