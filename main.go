@@ -35,6 +35,7 @@ func main() {
 
 	libsql_url := os.Getenv("libsql_url")
 	libsql_token := os.Getenv("libsql_token")
+
 	url := fmt.Sprintf("%s?authToken=%s", libsql_url, libsql_token)
 
 	db, err := sqlx.Open("libsql", url)

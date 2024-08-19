@@ -22,6 +22,29 @@ type AppState struct {
 	PostTemplate   *template.Template
 }
 
+func getPrev(page int, tag string) string {
+	result := ""
+	if page > 0 {
+		if page == 1 {
+			result = "/"
+		} else if page > 1 {
+			result = fmt.Sprintf("/?page=%d", page-1)
+		}
+
+		if tag != "" {
+			if strings.Contains(result, "?") {
+				result += "&"
+			} else {
+				result += "?"
+			}
+
+			result += fmt.Sprintf("tag=%s", url.QueryEscape(tag))
+		}
+	}
+
+	return result
+}
+
 func (state *AppState) HomeHandler(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 
@@ -46,24 +69,8 @@ func (state *AppState) HomeHandler(w http.ResponseWriter, r *http.Request) {
 		searchResults.Title = fmt.Sprintf("%s List", tag)
 	}
 
-	if page > 0 {
-		// Previous Page
-		if page == 1 {
-			searchResults.Prev = "/"
-		} else if page > 1 {
-			searchResults.Prev = fmt.Sprintf("/?page=%d", page-1)
-		}
-
-		if tag != "" {
-			if strings.Contains(searchResults.Prev, "?") {
-				searchResults.Prev += "&"
-			} else {
-				searchResults.Prev += "?"
-			}
-
-			searchResults.Prev += fmt.Sprintf("tag=%s", url.QueryEscape(tag))
-		}
-	}
+	// Previous Page
+	searchResults.Prev = getPrev(page, tag)
 
 	// Next Page
 	if len(posts) > 5 {
@@ -76,7 +83,6 @@ func (state *AppState) HomeHandler(w http.ResponseWriter, r *http.Request) {
 		posts = posts[:5]
 	}
 
-	fmt.Println(searchResults.Next)
 	searchResults.Posts = posts
 
 	err = state.SearchTemplate.Execute(w, searchResults)
