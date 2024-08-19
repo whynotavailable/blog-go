@@ -1,4 +1,4 @@
-package main
+package routes
 
 import (
 	"blog-go/models"
@@ -8,18 +8,21 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
-
-	"github.com/jmoiron/sqlx"
 )
 
-type appState struct {
-	db             *sqlx.DB
-	searchTemplate *template.Template
-	pageTemplate   *template.Template
-	postTemplate   *template.Template
+type Data interface {
+	Select(dest interface{}, query string, args ...interface{}) error
+	Get(dest interface{}, query string, args ...interface{}) error
 }
 
-func (state *appState) homeHandler(w http.ResponseWriter, r *http.Request) {
+type AppState struct {
+	Db             Data
+	SearchTemplate *template.Template
+	PageTemplate   *template.Template
+	PostTemplate   *template.Template
+}
+
+func (state *AppState) HomeHandler(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 
 	page, err := strconv.Atoi(query.Get("page"))
@@ -36,10 +39,10 @@ func (state *appState) homeHandler(w http.ResponseWriter, r *http.Request) {
 
 	if tag == "" {
 		// SELECT slug, tag, title FROM post WHERE published = TRUE AND tag = ?1 ORDER BY timestamp DESC LIMIT 6 OFFSET ?2
-		state.db.Select(&posts, "SELECT slug, tag, title FROM post WHERE published = TRUE ORDER BY timestamp DESC LIMIT 6 OFFSET ?1", offset)
+		state.Db.Select(&posts, "SELECT slug, tag, title FROM post WHERE published = TRUE ORDER BY timestamp DESC LIMIT 6 OFFSET ?1", offset)
 		searchResults.Title = "Home"
 	} else {
-		state.db.Select(&posts, "SELECT slug, tag, title FROM post WHERE published = TRUE AND tag = ?1 ORDER BY timestamp DESC LIMIT 6 OFFSET ?2", tag, offset)
+		state.Db.Select(&posts, "SELECT slug, tag, title FROM post WHERE published = TRUE AND tag = ?1 ORDER BY timestamp DESC LIMIT 6 OFFSET ?2", tag, offset)
 		searchResults.Title = fmt.Sprintf("%s List", tag)
 	}
 
@@ -76,7 +79,7 @@ func (state *appState) homeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(searchResults.Next)
 	searchResults.Posts = posts
 
-	err = state.searchTemplate.Execute(w, searchResults)
+	err = state.SearchTemplate.Execute(w, searchResults)
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, "%v", err)
@@ -84,9 +87,9 @@ func (state *appState) homeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (state *appState) pageHandler(w http.ResponseWriter, r *http.Request) {
+func (state *AppState) PageHandler(w http.ResponseWriter, r *http.Request) {
 	pageModel := models.PageData{}
-	err := state.db.Get(&pageModel, "SELECT * FROM page WHERE id = ?1", r.PathValue("id"))
+	err := state.Db.Get(&pageModel, "SELECT * FROM page WHERE id = ?1", r.PathValue("id"))
 	if err != nil {
 		// TODO: Figure out how to make this 404 properly
 		w.WriteHeader(500)
@@ -103,7 +106,7 @@ func (state *appState) pageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// hello := templates.Hello(r.PathValue("id"))
-	err = state.pageTemplate.Execute(w, page)
+	err = state.PageTemplate.Execute(w, page)
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, "%v", err)
@@ -111,9 +114,9 @@ func (state *appState) pageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (state *appState) postHandler(w http.ResponseWriter, r *http.Request) {
+func (state *AppState) PostHandler(w http.ResponseWriter, r *http.Request) {
 	pageModel := models.PostData{}
-	err := state.db.Get(&pageModel, "SELECT * FROM post WHERE slug = ?1", r.PathValue("id"))
+	err := state.Db.Get(&pageModel, "SELECT * FROM post WHERE slug = ?1", r.PathValue("id"))
 	if err != nil {
 		// TODO: Figure out how to make this 404 properly
 		w.WriteHeader(500)
@@ -136,7 +139,7 @@ func (state *appState) postHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// hello := templates.Hello(r.PathValue("id"))
-	err = state.postTemplate.Execute(w, page)
+	err = state.PostTemplate.Execute(w, page)
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, "%v", err)

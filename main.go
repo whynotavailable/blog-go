@@ -1,6 +1,7 @@
 package main
 
 import (
+	"blog-go/routes"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -45,16 +46,16 @@ func main() {
 
 	fs := http.FileServer(http.Dir("./assets"))
 
-	state := appState{
-		db:             db,
-		searchTemplate: searchTemplate,
-		pageTemplate:   pageTemplate,
-		postTemplate:   postTemplate,
+	state := routes.AppState{
+		Db:             db,
+		SearchTemplate: searchTemplate,
+		PageTemplate:   pageTemplate,
+		PostTemplate:   postTemplate,
 	}
 
-	http.HandleFunc("GET /", state.homeHandler)
-	http.HandleFunc("GET /page/{id}", state.pageHandler)
-	http.HandleFunc("GET /post/{id}", state.postHandler)
+	http.HandleFunc("GET /", state.HomeHandler)
+	http.HandleFunc("GET /page/{id}", state.PageHandler)
+	http.HandleFunc("GET /post/{id}", state.PostHandler)
 	http.Handle("GET /assets/", http.StripPrefix("/assets/", fs))
 
 	http.ListenAndServe(":3000", nil)
