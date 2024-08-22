@@ -10,6 +10,7 @@ type PageData struct {
 	Title   string
 	Excerpt sql.Null[string]
 	Content sql.Null[string]
+	Md      sql.NullString
 }
 
 type Page struct {
@@ -22,6 +23,7 @@ type PostData struct {
 	Title     string
 	Tag       sql.Null[string]
 	Content   sql.Null[string]
+	Md        sql.NullString
 	Timestamp sql.Null[int32]
 	Published bool
 }
