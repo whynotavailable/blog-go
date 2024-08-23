@@ -46,6 +46,9 @@ func getPrev(page int, tag string) string {
 }
 
 func (state *AppState) HomeHandler(w http.ResponseWriter, r *http.Request) {
+	con_url := fmt.Sprintf("https://whynot.sh%s", r.URL.String())
+	fmt.Println(con_url)
+
 	query := r.URL.Query()
 
 	page, err := strconv.Atoi(query.Get("page"))
@@ -56,7 +59,9 @@ func (state *AppState) HomeHandler(w http.ResponseWriter, r *http.Request) {
 	tag := query.Get("tag")
 
 	posts := []models.PostRow{}
-	searchResults := models.SearchResults{}
+	searchResults := models.SearchResults{
+		Url: template.HTML(con_url),
+	}
 
 	offset := page * 5
 
@@ -94,6 +99,8 @@ func (state *AppState) HomeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (state *AppState) PageHandler(w http.ResponseWriter, r *http.Request) {
+	url := fmt.Sprintf("https://whynot.sh%s", r.URL.String())
+
 	pageModel := models.PageData{}
 	err := state.Db.Get(&pageModel, "SELECT * FROM page WHERE id = ?1", r.PathValue("id"))
 	if err != nil {
@@ -105,6 +112,7 @@ func (state *AppState) PageHandler(w http.ResponseWriter, r *http.Request) {
 
 	page := models.Page{
 		Title: pageModel.Title,
+		Url:   url,
 	}
 
 	if pageModel.Content.Valid {
@@ -121,6 +129,8 @@ func (state *AppState) PageHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (state *AppState) PostHandler(w http.ResponseWriter, r *http.Request) {
+	url := fmt.Sprintf("https://whynot.sh%s", r.URL.String())
+
 	pageModel := models.PostData{}
 	err := state.Db.Get(&pageModel, "SELECT * FROM post WHERE slug = ?1", r.PathValue("id"))
 	if err != nil {
@@ -132,6 +142,7 @@ func (state *AppState) PostHandler(w http.ResponseWriter, r *http.Request) {
 
 	page := models.Post{
 		Title: pageModel.Title,
+		Url:   url,
 	}
 
 	if pageModel.Tag.Valid {

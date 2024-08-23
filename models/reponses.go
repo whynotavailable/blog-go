@@ -16,6 +16,7 @@ type PageData struct {
 type Page struct {
 	Title   string
 	Content template.HTML
+	Url     string
 }
 
 type PostData struct {
@@ -32,6 +33,7 @@ type Post struct {
 	Title   string
 	Tag     string
 	Content template.HTML
+	Url     string
 }
 
 type PostRow struct {
@@ -44,5 +46,6 @@ type SearchResults struct {
 	Title string
 	Prev  string
 	Next  string
+	Url   template.HTML
 	Posts []PostRow
 }
