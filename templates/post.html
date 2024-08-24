@@ -8,4 +8,9 @@
 </div>
 {{end}}
 
-{{define "meta"}}{{end}}
+{{define "meta"}}
+{{if .Desc}}
+<meta property="og:description" content="{{ .Desc }}" />
+<meta property="twitter:description" content="{{ .Desc }}" />
+{{end}}
+{{end}}
