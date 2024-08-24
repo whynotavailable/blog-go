@@ -739,6 +739,13 @@ pre[class*=language-] {
   margin-bottom: 0.5rem;
 }
 
+blockquote {
+  border-left-width: 1px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-weight: 300;
+}
+
 .after\:content-\[\'-\'\]::after {
   --tw-content: '-';
   content: var(--tw-content);

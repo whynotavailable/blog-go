@@ -63,3 +63,7 @@ pre[class*=language-] {
 .contents li {
   @apply mb-2;
 }
+
+blockquote {
+  @apply font-light px-4 border-l;
+}
