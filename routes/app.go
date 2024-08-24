@@ -58,7 +58,7 @@ func (state *AppState) HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 	tag := query.Get("tag")
 
-	posts := []models.PostRow{}
+	postsData := []models.PostRowData{}
 	searchResults := models.SearchResults{
 		Url: template.HTML(con_url),
 	}
@@ -67,10 +67,10 @@ func (state *AppState) HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 	if tag == "" {
 		// SELECT slug, tag, title FROM post WHERE published = TRUE AND tag = ?1 ORDER BY timestamp DESC LIMIT 6 OFFSET ?2
-		state.Db.Select(&posts, "SELECT slug, tag, title FROM post WHERE published = TRUE ORDER BY timestamp DESC LIMIT 6 OFFSET ?1", offset)
+		state.Db.Select(&postsData, "SELECT slug, tag, title, desc FROM post WHERE published = TRUE ORDER BY timestamp DESC LIMIT 6 OFFSET ?1", offset)
 		searchResults.Title = "Home"
 	} else {
-		state.Db.Select(&posts, "SELECT slug, tag, title FROM post WHERE published = TRUE AND tag = ?1 ORDER BY timestamp DESC LIMIT 6 OFFSET ?2", tag, offset)
+		state.Db.Select(&postsData, "SELECT slug, tag, title, desc FROM post WHERE published = TRUE AND tag = ?1 ORDER BY timestamp DESC LIMIT 6 OFFSET ?2", tag, offset)
 		searchResults.Title = fmt.Sprintf("%s List", tag)
 	}
 
@@ -78,14 +78,28 @@ func (state *AppState) HomeHandler(w http.ResponseWriter, r *http.Request) {
 	searchResults.Prev = getPrev(page, tag)
 
 	// Next Page
-	if len(posts) > 5 {
+	if len(postsData) > 5 {
 		searchResults.Next = fmt.Sprintf("/?page=%d", page+1)
 
 		if tag != "" {
 			searchResults.Next += fmt.Sprintf("&tag=%s", url.QueryEscape(tag))
 		}
 
-		posts = posts[:5]
+		postsData = postsData[:5]
+	}
+
+	posts := make([]models.PostRow, len(postsData))
+
+	for i, post := range postsData {
+		posts[i] = models.PostRow{
+			Slug:  post.Slug,
+			Title: post.Title,
+			Tag:   post.Tag,
+		}
+
+		if post.Desc.Valid {
+			posts[i].Desc = post.Desc.String
+		}
 	}
 
 	searchResults.Posts = posts

@@ -38,10 +38,18 @@ type Post struct {
 	Desc    string
 }
 
+type PostRowData struct {
+	Slug  string
+	Title string
+	Tag   string
+	Desc  sql.NullString
+}
+
 type PostRow struct {
 	Slug  string
 	Title string
 	Tag   string
+	Desc  string
 }
 
 type SearchResults struct {

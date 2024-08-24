@@ -2,6 +2,9 @@
 {{range .Posts}}
 <div class="mb-4">
   <h2 class="underline"><a href="/post/{{.Slug}}">{{.Title}}</a></h2>
+  {{if .Desc}}
+  <p>{{.Desc}}</p>
+  {{end}}
   <a class="text-on" href="/?tag={{.Tag}}">#{{.Tag}}</a>
 </div>
 {{else}}
