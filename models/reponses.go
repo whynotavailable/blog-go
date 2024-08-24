@@ -22,9 +22,10 @@ type Page struct {
 type PostData struct {
 	Slug      string
 	Title     string
-	Tag       sql.Null[string]
-	Content   sql.Null[string]
+	Tag       sql.NullString
+	Content   sql.NullString
 	Md        sql.NullString
+	Desc      sql.NullString
 	Timestamp sql.Null[int32]
 	Published bool
 }
@@ -34,6 +35,7 @@ type Post struct {
 	Tag     string
 	Content template.HTML
 	Url     string
+	Desc    string
 }
 
 type PostRow struct {

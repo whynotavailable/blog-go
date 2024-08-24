@@ -146,13 +146,17 @@ func (state *AppState) PostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if pageModel.Tag.Valid {
-		page.Tag = pageModel.Tag.V
+		page.Tag = pageModel.Tag.String
 	} else {
 		page.Tag = "tbd"
 	}
 
+	if pageModel.Desc.Valid {
+		page.Desc = pageModel.Desc.String
+	}
+
 	if pageModel.Content.Valid {
-		page.Content = template.HTML(pageModel.Content.V)
+		page.Content = template.HTML(pageModel.Content.String)
 	}
 
 	// hello := templates.Hello(r.PathValue("id"))
