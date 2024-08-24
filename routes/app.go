@@ -92,9 +92,7 @@ func (state *AppState) HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 	for i, post := range postsData {
 		posts[i] = models.PostRow{
-			Slug:  post.Slug,
-			Title: post.Title,
-			Tag:   post.Tag,
+			PostRowData: post,
 		}
 
 		if post.Desc.Valid {

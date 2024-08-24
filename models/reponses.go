@@ -46,10 +46,8 @@ type PostRowData struct {
 }
 
 type PostRow struct {
-	Slug  string
-	Title string
-	Tag   string
-	Desc  string
+	Desc string
+	PostRowData
 }
 
 type SearchResults struct {
